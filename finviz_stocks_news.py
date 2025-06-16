@@ -37,14 +37,17 @@ def finviz_stocks_news():
 
     # Finviz News/Stocks News
     driver.get(url)
-
     time.sleep(3)
-    table  = driver.find_elements(By.XPATH, '//*[@id="news"]/div/table/tbody/tr')
-    table_list = []
 
+    # Table
+    table  = driver.find_elements(By.XPATH, '//*[@id="news"]/div/table/tbody/tr')
+
+    # Rows
+    table_list = []
     for i in range(len(table)):
         table_list.append(table[i].text.splitlines())
 
+    # Data separation
     minutes = []
     headlines = []
     tickers = {}
