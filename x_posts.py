@@ -13,7 +13,7 @@ import getpass
 import importlib
 
 
-class ScrapeXTwitter:
+class ScrapeX:
     """
         Scrape X (F.K.A Twitter) posts from specified profile(s).
     """
