@@ -52,10 +52,8 @@ def popular_tickers(tickers: list[list] | list) -> pd.DataFrame:
             for ticker in tickers:
                 # If multiple tickers in row
                 if ',' in ticker:
-                    print(ticker)
                     split = ticker.split(',')
                     for i in split:
-                        print(i)
                         if i not in ticker_count:
                             ticker_count[i] = 1
                         else:
