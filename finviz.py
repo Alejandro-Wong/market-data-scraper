@@ -3,7 +3,7 @@ import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
-
+import screener_params as sp
 
 class Finviz:
 
@@ -96,19 +96,49 @@ class Finviz:
         df = pd.DataFrame(df_dict)
 
         return df
+    
+    def __url(self, signal: str=None, filters: list[str]=None, order_by: str=None) -> str:
+        """
+            Constructs URL for screener by adding all applicaple parameters to a list.
+            Returns joined list for final URL
+        """
+        url_parts = [sp.base_url]
 
+        # Signal
+        if signal:
+            url_parts.extend([sp.signal_query, sp.signals[signal]])
+        
+        # Filters
+        if filters:
+            url_parts.append(sp.filter_query)
 
-    def screener(self, signal: str, order_by: str) -> pd.DataFrame:
+            if len(filters) == 1:
+                url_parts.append(sp.search_filters(filters[0]))
+            elif len(filters) == 2:
+                url_parts.extend([sp.search_filters(filters[0]), sp.comma, sp.search_filters(filters[1])])
+            else:
+                url_parts.append(sp.search_filters(filters[0]))
+                for filter in filters[1:]:
+                    url_parts.append(sp.comma_multi)
+                    url_parts.append(sp.search_filters(filter))
+        # Order
+        if order_by:
+            url_parts.extend([sp.order_query, order_by])
+
+        return ''.join(url_parts)
+    
+  
+    def screener(self, signal: str=None, filters: list[str]=None, order_by: str=None) -> pd.DataFrame:
         """
             DataFrame of Finviz free screener results. 
             For now, only allows filtering by Signal (list of pre-made signals)
             and ordering results by columns.
         """
- 
-        url = f'https://finviz.com/screener.ashx?v=111&s={signal}&o={order_by}'
+
+        url = self.__url(signal, filters, order_by)
 
         self.driver.get(url)
-
+        time.sleep(15)
         screener_table = self.driver.find_elements(By.XPATH, '//*[@id="screener-table"]/td/table/tbody/tr/td/table/tbody/tr')
         table = []
         for row in screener_table:
