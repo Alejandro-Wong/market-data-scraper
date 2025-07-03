@@ -41,6 +41,9 @@ class XPosts:
         # Driver
         self.driver = webdriver.Chrome(options=self.options)
 
+        # Actions
+        self.actions = ActionChains(self.driver)
+
         # Login
         self.__login()
 
@@ -92,6 +95,62 @@ class XPosts:
         password_input.send_keys(Keys.ENTER) # Submit
         time.sleep(2)
 
+    def __url(self, username: str, keywords: list=None, include: list=None, exclude: list=None, category: str='live') -> str:
+        """
+            Constructs URL for tweets by adding all applicable parameters to a list.
+            Returls joined list for final URL
+
+            Default category is 'Latest' (live)
+        """
+        # Check for valid arguments
+        valid_categories = ['top', 'live', 'user', 'media', 'list']
+        valid_filters = ['replies','media','quote','retweets','mentions', 'links']
+
+        if category not in valid_categories:
+            raise ValueError(f"Invalid category. Category must be either {', '.join([i for i in valid_categories])}.")
+        
+        if include:
+            for i in include:
+                if i not in valid_filters:
+                    raise ValueError(f"Invalid include filter. Valid filters: {', '.join([i for i in valid_filters])}.")
+        if exclude:
+            for i in exclude:
+                if i not in valid_filters:
+                    raise ValueError(f"Invalid exclude filter. Valid filters: {', '.join([i for i in valid_filters])}.")
+            
+        if keywords and type(keywords) != list:
+            raise TypeError("keyword(s) must be in a list, even if using only one keyword.")
+
+        # Input separator
+        inp = '%3A'
+
+        # Parameter separator
+        par = '%20'
+
+        # Base URL
+        url_parts = [f'https://x.com/search?q=from%3A{username}']
+
+        # Keywords
+        if keywords:
+            for keyword in keywords:
+                url_parts.extend([par, keyword])
+
+        # Include
+        if include:
+            for filter in include:
+                url_parts.extend([par, 'filter', inp, filter])
+
+        # Exclude
+        if exclude:
+            for filter in exclude:
+                url_parts.extend([par, '-filter', inp, filter])
+
+        # Category
+        url_parts.append(f'&src=typed_query&f={category.lower()}')
+
+        return ''.join(url_parts)
+
+        
     def get_latest_posts(self, profile : str) -> pd.DataFrame:
         """
             Saves the latest ~20 posts from specified profiles(s) to pd.DataFrame(s)
@@ -99,8 +158,11 @@ class XPosts:
                 - Datetime
                 - Posts
         """
+        url = self.__url(profile, exclude=['media','replies','retweets','quote','links','mentions'])
+
         # Get desired profiles page
-        self.driver.get(f'https://x.com/search?q={profile}%20-filter%3Amedia%20-filter%3Areplies%20-filter%3Aretweets%20-filter%3Aquote%20-filter%3Alinks&src=typed_query&f=live')
+        self.driver.get(url)
+        # self.driver.get(f'https://x.com/search?q=from%3{profile}%20-filter%3Amedia%20-filter%3Areplies%20-filter%3Aretweets%20-filter%3Aquote%20-filter%3Alinks&src=typed_query&f=live')
         time.sleep(3)
 
         # User not found
@@ -207,4 +269,62 @@ class XPosts:
 
         self.driver.close()
 
+    def get_posts(self, username: str, keywords: list=None, include: list=None, exclude: list=None, category: str='live'):
 
+        url = self.__url(username, keywords, include, exclude, category)
+
+        self.driver.get(url)
+        time.sleep(3)
+
+        # User not found
+        not_found = self.driver.find_elements(By.XPATH, '//*[@id="react-root"]/div/div/div[2]/main/div/div/div/div[1]/div/div[3]/div/div/div[1]/span')
+        if not_found:
+            print(f"{username} not found, check spelling")
+            return
+
+        # Empty lists for datetime and posts
+        datetime_idx = []
+        posts = []
+
+        # Find posts
+        latest_posts = self.driver.find_elements(By.XPATH, '//article[@data-testid="tweet"]')
+        
+        # Separate a clean datetime and post info, append to appropriate lists
+        for post in latest_posts:
+
+            time_tag = post.find_element(By.XPATH, './/time')
+            if time_tag:
+                datetime_attr = pd.to_datetime(time_tag.get_attribute('datetime'))
+                datetime = datetime_attr.tz_convert(pytz.timezone('America/New_York'))
+                datetime = datetime.strftime('%Y-%m-%d %H:%M')
+                datetime = pd.to_datetime(datetime)
+                datetime_idx.append(datetime)
+                time.sleep(2)
+
+            # Show more
+            show_more = post.find_element(By.XPATH, '//button[@data-testid="tweet-text-show-more-link"]')
+            if show_more:
+                show_more.click()
+                self.actions.send_keys(Keys.PAGE_DOWN).perform()
+                time.sleep(2)
+
+
+            filter_text = post.text.splitlines()
+            text = filter_text[4:-4]
+        #     # if 'Show more' in text:
+        #     #     temp_list = []
+        #     #     show_more = self.driver.find_elements(By.XPATH, '//*[@id="id__72og8daf9d5"]')
+        #     #     for x in show_more:
+        #     #         temp_list.append(x.text[:-4])
+        #     #     # temp_final = ''.join(temp_list)
+        #     #     print(temp_list)
+        #     posts.append(text)
+
+        # Create dataframe of latest posts
+        datetime_series = pd.Series(datetime_idx)
+        posts_series = pd.Series(posts)
+
+        df_dict = {'Datetime':datetime_series, 'Posts':posts_series}
+        df = pd.DataFrame(df_dict)
+
+        return df

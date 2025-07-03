@@ -139,8 +139,13 @@ indexes = {
     'rut': 'idx_rut'
 }
 
+# Country
+country = {
+    'usa': 'geo_usa'
+}
 
-filters = [exchanges, market_caps, earnings_dates, prices, indexes]
+
+filters = [exchanges, market_caps, earnings_dates, prices, indexes, country]
 
 
 

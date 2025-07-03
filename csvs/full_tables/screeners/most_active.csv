@@ -1,0 +1,14 @@
+#,Symbol,Company,Sector,Industry,Country,Market Cap,P/E,Price,Change,Volume
+1,NVDA,NVIDIA Corp,Technology,Semiconductors,USA,3897.41B,51.45,159.73,1.58%,81265572
+2,TSLA,Tesla Inc,Consumer Cyclical,Auto Manufacturers,USA,1016.61B,173.81,316.06,0.13%,32175400
+3,PLTR,Palantir Technologies Inc,Technology,Software - Infrastructure,USA,316.16B,585.02,133.97,1.40%,23563279
+4,AAPL,Apple Inc,Technology,Consumer Electronics,USA,3193.58B,33.37,213.82,0.65%,17330061
+5,AMD,Advanced Micro Devices Inc,Technology,Semiconductors,USA,224.14B,101.33,138.24,-0.20%,16733493
+6,AMZN,Amazon.com Inc,Consumer Cyclical,Internet Retail,USA,2357.79B,36.22,222.09,0.99%,15915212
+7,GOOGL,Alphabet Inc,Communication Services,Internet Content & Information,USA,2171.96B,19.9,178.48,-0.09%,10657504
+8,BAC,Bank Of America Corp,Financial,Banks - Diversified,USA,369.48B,14.65,49.06,0.71%,9024261
+9,ORCL,Oracle Corp,Technology,Software - Infrastructure,USA,653.09B,53.56,232.51,1.10%,6793097
+10,GOOG,Alphabet Inc,Communication Services,Internet Content & Information,USA,2172.58B,20.03,179.65,-0.06%,6607632
+11,T,"AT&T, Inc",Communication Services,Telecom Services,USA,203.96B,17.41,28.34,0.12%,6466263
+12,MSFT,Microsoft Corporation,Technology,Software - Infrastructure,USA,3705.64B,38.53,498.57,1.52%,5102463
+13,META,Meta Platforms Inc,Communication Services,Internet Content & Information,USA,1801.84B,27.96,716.68,0.44%,4655646

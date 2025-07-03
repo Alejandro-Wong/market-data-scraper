@@ -1,7 +1,7 @@
 import pandas as pd
 import re
 
-def only_tickers(col: pd.Series) -> list:
+def only_tickers(col: pd.Series | list) -> list:
     """
         Iterates through DataFrame column and finds
         all instances of tickers i.e '$AAPL', '$XYZ'.
@@ -9,7 +9,7 @@ def only_tickers(col: pd.Series) -> list:
     """
 
     # Regex pattern to find tickers prefixed by '$'
-    pattern = r'\$([A-Z^]+)'
+    pattern = r'\$([A-Z]+)'
 
     # Tickers list
     tickers = []
@@ -25,7 +25,6 @@ def only_tickers(col: pd.Series) -> list:
                 target = re.sub(r'[^\w\s]','', target)
                 if target not in tickers:
                     tickers.append(target)
-
 
     return tickers
 
@@ -50,7 +49,7 @@ def popular_tickers(tickers: list[list] | list) -> pd.DataFrame:
         # If just list
         elif isinstance(tickers[0], str):
             for ticker in tickers:
-                # If multiple tickers in row
+                # If multiple tickers in row (finviz news headlines)
                 if ',' in ticker:
                     split = ticker.split(',')
                     for i in split:
