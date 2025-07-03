@@ -1,0 +1,2 @@
+# Discord token
+DISCORD_TOKEN = MTM4OTYwOTgzNjk0MTAxNzIzMA.GvEeu6.KcssjnIkxpKIwV9MUhBYILNEa_2YGcrs-2hDxo
