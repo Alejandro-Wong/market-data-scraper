@@ -47,11 +47,14 @@ screener_delay = 60 * 5
 
 async def finviz_screeners(channel: discord.TextChannel):
 
-
     print("FinViz Screeners Activated","\n")
 
+    # Global start variable
     global screener_start
+    
+    # Column widths for table
     columnwidth = [25, 70, 70, 70, 70]
+
     while screener_start == True:
         # FinViz Scraper
         fz = Finviz()
@@ -100,8 +103,12 @@ news_delay = 60 * 5
 async def finviz_news(channel: discord.TextChannel):
 
     print("FinViz News Headlines activated")
+    # Global start variable
     global news_start
+
+    # Column widths for table
     columnwidth = [25, 200, 25, 25]
+    
     while news_start == True:
 
         fz = Finviz()
