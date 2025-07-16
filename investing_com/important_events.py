@@ -8,9 +8,10 @@ def important_events() -> dict:
     Keys: Economic calendar events
     Values: Database IDs
     """
+    
     # Get current and previous month names.
     today = datetime.now()
-    curr_mo = today.strftime('%B')[:3]
+    curr_mo = today.strftime('%b')
 
     first_day = today.replace(day=1)
     previous_month = first_day - timedelta(days=1)
