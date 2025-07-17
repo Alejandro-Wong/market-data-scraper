@@ -82,7 +82,7 @@ def update_event_histories(events_codes: dict, events: list, path: str) -> None:
         # Get relevant json data
         response = requests.get(url, headers=headers)
 
-        if response.status_code == '200':
+        if response.status_code == 200:
             print(f'{event} - OK!')
         else:
             print(f'{event} - ALERT!')
@@ -92,21 +92,18 @@ def update_event_histories(events_codes: dict, events: list, path: str) -> None:
 
         # Create DataFrame
         df = pd.DataFrame(attr)
-
-        if 'revised' in df.columns or 'revised_formatted' in df.columns:
-            df = df.drop(columns=['revised', 'revised_formatted'])
-        else:
-            continue
-
-        # df = df.dropna()
-
+        df['actual'] = df['revised'].where(df['revised'].notna(), df['actual'])
+        df['previous'] = df['actual'].shift(1)
         df['datetime'] = pd.to_datetime(df['timestamp'], unit='ms', utc=True).dt.tz_convert('US/Eastern').dt.date
         df = df.drop(columns='timestamp')
-        df = df[['datetime','actual_state','actual','forecast']]
+
+        if 'revised' in df.columns: 
+            df = df[['datetime','actual_state','actual','forecast', 'previous', 'revised']]
+        else:
+            df = df[['datetime','actual_state','actual','forecast', 'previous']]
 
         df.to_csv(f'{path}{event}.csv')
         time.sleep(5)
-
 
 if __name__ == "__main__":
     events = important_events()
