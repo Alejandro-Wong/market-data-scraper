@@ -1,21 +1,36 @@
-,Time,Country,Event
-15,07:00,  USD,OPEC Monthly Report  
-20,08:00,  USD,Milk Auctions
-21,08:30,  USD,Core CPI (YoY) (Jun)
-22,08:30,  USD,Core CPI (MoM) (Jun)
-23,08:30,  USD,Core CPI Index (Jun)
-24,08:30,  USD,CPI (MoM) (Jun)
-25,08:30,  USD,CPI (YoY) (Jun)
-26,08:30,  USD,"CPI Index, n.s.a. (Jun)"
-27,08:30,  USD,"CPI Index, s.a (Jun)"
-28,08:30,  USD,"CPI, n.s.a (MoM) (Jun)"
-29,08:30,  USD,NY Empire State Manufacturing Index (Jul)
-30,08:30,  USD,Real Earnings (MoM) (Jun)
-40,09:00,  USD,Redbook (YoY)
-44,09:15,  USD,FOMC Member Bowman Speaks  
-45,11:00,  USD,Cleveland CPI (MoM) (Jun)
-46,12:45,  USD,Fed Vice Chair for Supervision Barr Speaks  
-47,13:00,  USD,FOMC Member Barkin Speaks  
-48,14:45,  USD,Fed Collins Speaks  
-50,16:30,  USD,API Weekly Crude Oil Stock
-55,19:45,  USD,Fed Logan Speaks  
+"Thursday, July 17, 2025",Time,Country,Stars,Event
+0,08:30,USD,2,Continuing Jobless Claims
+1,08:30,USD,3,Core Retail Sales (MoM)  (Jun)
+2,08:30,USD,1,Export Price Index (YoY)  (Jun)
+3,08:30,USD,2,Export Price Index (MoM)  (Jun)
+4,08:30,USD,1,Import Price Index (YoY)  (Jun)
+5,08:30,USD,2,Import Price Index (MoM)  (Jun)
+6,08:30,USD,3,Initial Jobless Claims
+7,08:30,USD,1,Jobless Claims 4-Week Avg.
+8,08:30,USD,3,Philadelphia Fed Manufacturing Index  (Jul)
+9,08:30,USD,1,Philly Fed Business Conditions  (Jul)
+10,08:30,USD,1,Philly Fed CAPEX Index  (Jul)
+11,08:30,USD,2,Philly Fed Employment  (Jul)
+12,08:30,USD,1,Philly Fed New Orders  (Jul)
+13,08:30,USD,1,Philly Fed Prices Paid  (Jul)
+14,08:30,USD,2,Retail Control (MoM)  (Jun)
+15,08:30,USD,3,Retail Sales (MoM)  (Jun)
+16,08:30,USD,1,Retail Sales (YoY)  (Jun)
+17,08:30,USD,1,Retail Sales Ex Gas/Autos (MoM)  (Jun)
+18,10:00,USD,2,Business Inventories (MoM)  (May)
+19,10:00,USD,1,FOMC Member Kugler Speaks
+20,10:00,USD,1,NAHB Housing Market Index  (Jul)
+21,10:00,USD,2,Retail Inventories Ex Auto  (May)
+22,10:30,USD,1,Natural Gas Storage
+23,11:30,USD,1,4-Week Bill Auction
+24,11:30,USD,1,8-Week Bill Auction
+25,12:00,USD,2,Atlanta Fed GDPNow  (Q2)
+26,12:45,USD,2,FOMC Member Daly Speaks
+27,13:30,USD,1,Fed Governor Cook Speaks
+28,16:00,USD,1,"US Foreign Buying, T-bonds  (May)"
+29,16:00,USD,1,Overall Net Capital Flow  (May)
+30,16:00,USD,2,TIC Net Long-Term Transactions  (May)
+31,16:00,USD,1,TIC Net Long-Term Transactions including Swaps  (May)
+32,16:30,USD,2,Fed's Balance Sheet
+33,16:30,USD,1,Reserve Balances with Federal Reserve Banks
+34,18:30,USD,2,Fed Waller Speaks
