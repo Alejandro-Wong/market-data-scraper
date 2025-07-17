@@ -1,65 +1,57 @@
-import asyncio
+import requests
+from bs4 import BeautifulSoup
 import pandas as pd
 
 
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.chrome.service import Service
-
-
-async def econ_calendar(filter: str='USD') -> pd.DataFrame:
+def econ_calendar(country: str='USD') -> pd.DataFrame:
     """
     Fetches today's economic calendar from investing.com filters by currency, filter
     set to USD by default.
     """
 
-    # Options
-    options = Options()
-    options.add_argument("--headless=new")
-    options.add_argument("--disable-gpu")
-    options.add_argument("--disable-infobars")
-    options.add_argument("--disable-extensions")
-    options.page_load_strategy = 'none'
+    url = 'https://www.investing.com/economic-calendar/'
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+        'Referer': 'https://www.investing.com',
+        'Accept': 'application/json, text/javascript, */*; q=0.01',
+        }
+    
+    response = requests.get(url, headers=headers)
+    soup = BeautifulSoup(response.text, 'html.parser')
 
-    # User agent
-    options.add_argument("--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36")
+    table = soup.find('table', { 'id' : 'economicCalendarData'})
 
-    # Driver
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    headers = []
+    rows = []
+    stars = []
 
-    # URL 
-    url = "https://www.investing.com/economic-calendar/"
-    driver.get(url)
-    await asyncio.sleep(2)
+    for i, row in enumerate(table.find_all('tr')):
+        if i == 0:
+            headers = [i.text.strip() for i in row.find_all('th')]
+        else:
+            rows.append([i.text.strip() for i in row.find_all('td')])
+            elements = row.find_all(attrs={'class': 'left textNum sentiment noWrap', 'data-img_key': True})
+            for element in elements:
+                img_key = element.get('data-img_key')
+                stars.append(int(img_key[4]))
 
-    # Table
-    table = driver.find_element(By.XPATH, '//*[@id="economicCalendarData"]')
+    headers.pop(7)
+    date = rows[1]
+    rows = rows[2:]
+    for row in rows:
+        row.pop(7)
 
-    # Columns
-    time = table.find_elements(By.XPATH, '//*[@class="first left time js-time"]')
-    cur = table.find_elements(By.XPATH, '//*[@class="left flagCur noWrap"]')
-    importance = table.find_elements(By.XPATH, '//*[@class="left textNum sentiment noWrap"]')
-    event = table.find_elements(By.XPATH, '//*[@class="left event"]')
+    df = pd.DataFrame(columns=headers, data=rows)
+    df['Imp.'] = pd.Series(stars)
+    df = df.rename(columns={'Cur.': 'Country', 'Imp.': 'Stars'})
+    df = df[['Time','Country','Stars','Event']]
 
-    # Series
-    cur_series = pd.Series([c.text for c in cur])
-    time_series = pd.Series([t.text for t in time]) 
-    event_series = pd.Series([e.text for e in event])
+    df = df[df['Country'].str.strip() == country].reset_index(drop=True) 
+    df.index.name = date[0]
 
-    # DataFrame
-    df = pd.DataFrame()
-    df['Time'] = time_series
-    df['Country'] = cur_series
-    df['Event'] = event_series
-
-    return df[df['Country'].str.strip() == filter]
-
-# Save df to csv
-async def save_econ_cal():
-    cal = await econ_calendar()
-    cal.to_csv('./csvs/econ_calendar.csv')
+    return df
 
 if __name__ == "__main__":
-    asyncio.run(save_econ_cal())
+    econ_cal = econ_calendar()
+    econ_cal.to_csv('./csvs/econ_calendar.csv')
+
