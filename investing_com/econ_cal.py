@@ -19,7 +19,7 @@ def econ_calendar(country: str='USD') -> pd.DataFrame:
     response = requests.get(url, headers=headers)
     soup = BeautifulSoup(response.text, 'html.parser')
 
-    table = soup.find('table', { 'id' : 'economicCalendarData'})
+    table = soup.find('table', { 'id' : 'economicCalendarData' })
 
     headers = []
     rows = []

@@ -15,7 +15,6 @@ def events_to_update(file: str, all_events: dict) -> list:
     event history database.
     """
 
-    # Read in latest econ calendar
     df = pd.read_csv(file, index_col=[0])
 
     """
@@ -33,7 +32,6 @@ def events_to_update(file: str, all_events: dict) -> list:
         time created + number of minutes (rounded to nearest 5 minutes if necessary)
     """
 
-    # Get time econ cal file was created
     df_time_created = os.stat(file).st_ctime
     time_created = time.strftime("%H:%M", time.localtime(df_time_created))
     time_created = pd.to_datetime(time_created)
@@ -49,11 +47,9 @@ def events_to_update(file: str, all_events: dict) -> list:
 
     df['Time'] = pd.to_datetime(df['Time'], format='%H:%M')
 
-    # Check if any important events today and if they already occured
     current_time = datetime.now().replace(microsecond=0)
     current_time = pd.to_datetime(current_time)
 
-    # Dictionary of important events today
     today_events = []
     for i, row in df.iterrows():
         if row['Event'] in all_events:
@@ -71,7 +67,6 @@ def update_event_histories(events_codes: dict, events: list, path: str) -> None:
 
     for event in events:
 
-        # URL / Headers
         url = f'https://sbcharts.investing.com/events_charts/us/{events_codes[event]}.json'
         headers = {
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
@@ -79,7 +74,6 @@ def update_event_histories(events_codes: dict, events: list, path: str) -> None:
             'Accept': 'application/json, text/javascript, */*; q=0.01',
             }
         
-        # Get relevant json data
         response = requests.get(url, headers=headers)
 
         if response.status_code == 200:
@@ -90,7 +84,6 @@ def update_event_histories(events_codes: dict, events: list, path: str) -> None:
         response_json = response.json()
         attr = response_json['attr']
 
-        # Create DataFrame
         df = pd.DataFrame(attr)
         df['actual'] = df['revised'].where(df['revised'].notna(), df['actual'])
         df['previous'] = df['actual'].shift(1)
