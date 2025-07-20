@@ -1,6 +1,6 @@
 import asyncio
-from finviz.finviz import Finviz
-from finviz.extract_tickers import *
+from finviz import Finviz
+from extract_tickers import *
 
 # Path
 only_tickers_path = './csvs/only_tickers/'

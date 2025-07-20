@@ -1,6 +1,6 @@
-import datetime
 import requests
 import pandas as pd
+from pandas import DataFrame
 from bs4 import BeautifulSoup
 
 import screener_params as sp
@@ -48,7 +48,11 @@ class Finviz:
         return ''.join(url_parts)
     
     def screener(self, signal: str=None, filters: list[str]=None, order_by: str=None) -> pd.DataFrame:
-    
+        """
+        DataFrame of Finviz free screener results. 
+        For now, only allows filtering by Signal (list of pre-made signals)
+        and ordering results by columns.
+        """ 
         url = self.build_url(signal, filters, order_by)
 
         response = requests.get(url,headers=self.headers,)
@@ -85,14 +89,14 @@ class Finviz:
         soup = BeautifulSoup(response.text, 'html.parser')
 
         table = soup.find('table', { 'class': 'styled-table-new' })
-        columns = ['Time Elapsed','Headline','Ticker(s)','Source']
+        columns = ['Time Elapsed','Headline','Ticker','Source']
         rows = []
         for row in table.find_all('tr'):
             rows.append([i.text.splitlines() for i in row.find_all('td')])
         rows = [row[0] + [r for r in row[1] if r] for row in rows]
 
         df = pd.DataFrame(columns=columns, data=rows)
-        df['Ticker(s)'] = df['Ticker(s)'].apply(lambda t: 
+        df['Ticker'] = df['Ticker'].apply(lambda t: 
             (lambda p: p[0] if len(p) == 1 else p)
             ([i for i in (t.split(' ') if len(t) > 4 else [t]) 
             if not any(c in str(i) for c in '%+-')])

@@ -3,9 +3,9 @@ import re
 
 def only_tickers(col: pd.Series | list) -> list:
     """
-        Iterates through DataFrame column and finds
-        all instances of tickers i.e '$AAPL', '$XYZ'.
-        Appends tickers to a list.
+    Iterates through DataFrame column and finds
+    all instances of tickers i.e '$AAPL', '$XYZ'.
+    Appends tickers to a list.
     """
 
     # Regex pattern to find tickers prefixed by '$'

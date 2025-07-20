@@ -1,0 +1,27 @@
+
+# VS Code workspace files
+*.code-workspace
+
+# DS_Store
+.DS_Store
+
+# Git ignore
+# .gitignore
+
+# .env
+# .env
+
+# Text Files
+*.txt
+
+# Folders
+temp_trash
+
+# pycache
+__pycache__
+
+# Logs
+*.log
+
+# CSVs
+*.csv
