@@ -22,6 +22,7 @@ class Finviz:
             Constructs URL for screener by adding all applicaple parameters to a list.
             Returns joined list for final URL
         """
+        
         url_parts = [sp.base_url]
 
         # Signal
@@ -53,6 +54,7 @@ class Finviz:
         For now, only allows filtering by Signal (list of pre-made signals)
         and ordering results by columns.
         """ 
+
         url = self.build_url(signal, filters, order_by)
 
         response = requests.get(url,headers=self.headers,)
