@@ -6,10 +6,10 @@
 .DS_Store
 
 # Git ignore
-# .gitignore
+.gitignore
 
 # .env
-# .env
+.env
 
 # Text Files
 *.txt
