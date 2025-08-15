@@ -17,6 +17,21 @@ def important_events() -> dict:
     previous_month = first_day - timedelta(days=1)
     prev_mo = previous_month.strftime('%b')
 
+
+    # Get previous quarter number
+    Q = {
+            1: [1,2,3],
+            2: [4,5,6],
+            3: [7,8,9],
+            4: [10,11,12]
+    }
+
+    q_num = 0
+    for i in range(len(Q)):
+        key = i + 1
+        if datetime.today().month in Q[key]:
+            q_num = key - 1
+    
     # Events : Event id
     events_id = {
         'Crude Oil Inventories': 75,
@@ -38,7 +53,7 @@ def important_events() -> dict:
         f'CB Consumer Confidence ({curr_mo})': 48,
         f'JOLTS Job Openings ({prev_mo})': 1057,
         f'ADP Nonfarm Employment Change ({curr_mo})': 1,
-        f'GDP (QoQ) (Q2)': 375,
+        f'GDP (QoQ) (Q{q_num})': 375,
         'Fed Interest Rate Decision': 168,
         f'Core PCE Price Index (YoY) ({prev_mo})': 905,
         f'Core PCE Price Index (MoM) ({prev_mo})': 61,
@@ -48,3 +63,6 @@ def important_events() -> dict:
     }
 
     return events_id
+
+
+print(Q)
