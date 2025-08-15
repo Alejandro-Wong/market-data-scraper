@@ -13,5 +13,8 @@ if __name__ == "__main__":
     # Update event histories
     update = update_event_histories(imp_events, events_today, './csvs/')
 
+    # Update all event histories
+    update_all = update_event_histories(imp_events, imp_events.keys(), './csvs/')
+
 
 
