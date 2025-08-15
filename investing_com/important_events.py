@@ -63,6 +63,3 @@ def important_events() -> dict:
     }
 
     return events_id
-
-
-print(Q)
