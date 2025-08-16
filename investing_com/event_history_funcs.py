@@ -58,6 +58,13 @@ def events_to_update(file: str, all_events: dict) -> list:
 
     return today_events
 
+def event_name(event: str) -> str:
+    if '(' in event:
+        split = event.split(' ')
+        event_new = ' '.join(split[:-1])
+        return event_new
+    else:
+        return event
 
 def update_event_histories(events_codes: dict, events: list, path: str) -> None:
     """
@@ -75,6 +82,7 @@ def update_event_histories(events_codes: dict, events: list, path: str) -> None:
             }
         
         response = requests.get(url, headers=headers)
+        name = event_name(event)
 
         if response.status_code == 200:
             print(f'{event} - OK!')
@@ -95,8 +103,9 @@ def update_event_histories(events_codes: dict, events: list, path: str) -> None:
         else:
             df = df[['datetime','actual_state','actual','forecast', 'previous']]
 
-        df.to_csv(f'{path}{event}.csv')
+        df.to_csv(f'{path}{name}.csv')
         time.sleep(5)
+
 
 if __name__ == "__main__":
     events = important_events()
