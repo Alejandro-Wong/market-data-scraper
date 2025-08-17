@@ -8,8 +8,8 @@
 # Git ignore
 .gitignore
 
-# .env
-# .env
+.env
+
 
 # Text Files
 *.txt
